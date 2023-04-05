@@ -32,7 +32,7 @@
         <object class="Frame" expanded="1">
             <property name="aui_managed">0</property>
             <property name="aui_manager_style">wxAUI_MGR_DEFAULT</property>
-            <property name="bg">wxSYS_COLOUR_MENU</property>
+            <property name="bg">wxSYS_COLOUR_WINDOW</property>
             <property name="center">wxBOTH</property>
             <property name="context_help"></property>
             <property name="context_menu">1</property>
