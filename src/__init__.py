@@ -72,45 +72,47 @@ class MainFrame(MainForm.MainFrame):
         except KeyError:
             total_bytes = event["total_bytes_estimate"]
 
-        self.ProgressBar.SetValue(event["downloaded_bytes"] / total_bytes * 100)
+        self.ProgressBar.SetValue(int(event["downloaded_bytes"] / total_bytes * 100))
 
     def run_download(self):
         self.ProgressBar.SetValue(0)
-        self.OutputText.SetLabel("Downloading...")
         print("Running download")
         if self.VideoCheck.IsChecked():
+            self.OutputText.SetLabel("Downloading video...")
             self.download_video()
 
         if self.AudioCheck.IsChecked():
+            self.OutputText.SetLabel("Downloading audio...")
             self.download_audio()
 
         print("Done")
         self.OutputText.SetLabel("Done")
         self.ProgressBar.SetValue(100)
 
-    def download_video(self):
+    def download(self, type: str):
+        if type.lower() not in ["video", "audio"]:
+            print("Invalid download type")
+            return
+        if type.lower() == "video":
+            download_function = downloader.download_video
+        else:
+            download_function = downloader.download_video_as_mp3
         url = self.URL.GetValue()
         output_dir = self.OutputDir.GetPath()
-        video_download = threading.Thread(
-            target=downloader.download_video,
+        download = threading.Thread(
+            target=download_function,
             args=(url, output_dir, self.on_download_hook),
         )
-        video_download.start()
-        while video_download.is_alive():
+        download.start()
+        while download.is_alive():
             time.sleep(0.1)
             wx.Yield()
 
+    def download_video(self):
+        self.download("video")
+
     def download_audio(self):
-        url = self.URL.GetValue()
-        output_dir = self.OutputDir.GetPath()
-        audio_download = threading.Thread(
-            target=downloader.download_video_as_mp3,
-            args=(url, output_dir, self.on_download_hook),
-        )
-        audio_download.start()
-        while audio_download.is_alive():
-            time.sleep(0.1)
-            wx.Yield()
+        self.download("audio")
 
 
 app = App(False)
