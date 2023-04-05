@@ -22,7 +22,7 @@ class App(wx.App):
             # We're on a non-Windows box.
             pass
 
-        except OSError:
+        except (OSError, ImportError):
             # exc.winerror is often E_ACCESSDENIED (-2147024891/0x80070005).
             # This occurs after the first run, when the parameter is reset in the
             # executable's manifest and then subsequent calls raise this exception
