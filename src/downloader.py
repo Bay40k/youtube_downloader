@@ -1,6 +1,18 @@
+import os
+import sys
 from pathlib import Path
 
 import yt_dlp
+
+# Make sure ffmpeg is accessible on Windows
+try:
+    wd = sys._MEIPASS
+except AttributeError:
+    wd = os.getcwd()
+
+FFMPEG_PATH = os.path.join(wd, "ffmpeg.exe")
+if not os.path.exists(FFMPEG_PATH):
+    FFMPEG_PATH = "ffmpeg"
 
 
 def move_file(src: Path, dst: Path):
@@ -41,6 +53,7 @@ def download_video(
         output_dir = Path(output_dir)
     output_dir = output_dir.resolve()
     ydl_opts = {
+        "ffmpeg_location": FFMPEG_PATH,
         "format": "mp4/bestvideo/best",
     }
 

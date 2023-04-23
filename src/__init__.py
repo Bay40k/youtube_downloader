@@ -72,7 +72,11 @@ class MainFrame(MainForm.MainFrame):
         except KeyError:
             total_bytes = event["total_bytes_estimate"]
 
-        self.ProgressBar.SetValue(int(event["downloaded_bytes"] / total_bytes * 100))
+        try:
+            downloaded_bytes = event["downloaded_bytes"]
+            self.ProgressBar.SetValue(int(downloaded_bytes / total_bytes * 100))
+        except KeyError:
+            self.ProgressBar.Pulse()
 
     def run_download(self):
         self.ProgressBar.SetValue(0)
